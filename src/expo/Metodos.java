@@ -4,7 +4,14 @@
  */
 package expo;
 
+import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
+import java.util.List;
+import com.db4o.query.Constraint;
+import com.db4o.query.Query;
+
+
 
 /**
  *
@@ -27,6 +34,112 @@ public class Metodos {
         }catch(Exception e){
             System.out.println("Error en el cierre de la BD.");
         }
-        
     }
-}
+     
+    public static void imprimirResultadoConsulta(ObjectSet resultado){
+        System.out.println("Informacion: " + resultado.size() + " Objetos");
+        while(resultado.hasNext()){
+            System.out.println(resultado.next());
+        }
+    }
+    
+    // Tipos de Consultas.
+    
+    public static void consultarQBEExpositorPorIdentificacion(ObjectContainer baseDeDatos, String identificacion){
+        Expositor nuevoExpositor = new Expositor(identificacion, null,null,0);
+        ObjectSet resultado = baseDeDatos.queryByExample(nuevoExpositor);
+        imprimirResultadoConsulta(resultado);
+    }
+    
+    public static void ConsultarQBEExpositorPorNombre(ObjectContainer baseDeDatos, String nombre){
+        Expositor nuevoExpositor = new Expositor(null,nombre,null,0);
+        ObjectSet resultado = baseDeDatos.queryByExample(nuevoExpositor);
+        imprimirResultadoConsulta(resultado);
+    }
+    
+    public static void ConsultarQBEExpositorPorGanancia(ObjectContainer baseDeDatos, float ganancia){
+        Expositor nuevoExpositor = new Expositor(null,null,null,ganancia);
+        ObjectSet resultado = baseDeDatos.queryByExample(nuevoExpositor);
+        imprimirResultadoConsulta(resultado);
+    }
+    
+   public static void ConsultarNativaPonentesIdentificacion(ObjectContainer baseDeDatos, final String identificacion){
+       List resultado = baseDeDatos.query(new com.db4o.query.Predicate(){
+           public boolean match(Expositor nuevoExpositor){
+               return nuevoExpositor.getIndentificacion().equalsIgnoreCase(identificacion);
+           }
+            @Override
+           public boolean match(Object et){
+              throw new UnsupportedOperationException("Not Supported yet.");
+           }
+       });
+       imprimirResultadoConsulta((ObjectSet) resultado);
+   }
+   
+   public static void ConsultarNativaExpositorPorGanancia(ObjectContainer baseDeDatos, final float ganancia){
+       List resultado = baseDeDatos.query(new com.db4o.query.Predicate(){
+           public boolean match(Expositor nuevoExpositor){
+               return nuevoExpositor.getGanancia()== ganancia;
+           }
+            @Override
+           public boolean match(Object et){
+              throw new UnsupportedOperationException("Not Supported yet.");
+           }
+           
+       });
+       imprimirResultadoConsulta((ObjectSet) resultado);
+       
+   }
+   public static void ConsultarNativaExpositoresPorGananciaMayor(ObjectContainer baseDeDatos, final float gananciaBase){
+       List resultado = baseDeDatos.query(new com.db4o.query.Predicate(){
+           public boolean match(Expositor nuevoExpositor){
+               return nuevoExpositor.getGanancia()>= gananciaBase;
+           }
+            @Override
+           public boolean match(Object et){
+              throw new UnsupportedOperationException("Not Supported yet.");
+           }
+           
+       });
+       imprimirResultadoConsulta((ObjectSet) resultado);
+       
+   }
+   
+   public static void ConsultaSODAExpositores(ObjectContainer baseDeDatos){
+       Query nuevoQuery = baseDeDatos.query();
+       nuevoQuery.constrain(Expositor.class);
+       ObjectSet resultado = nuevoQuery.execute();
+       imprimirResultadoConsulta(resultado);
+   }
+   
+   public static void ConsultaSODAExpositoresPorNombre(ObjectContainer baseDeDatos, String nombre){
+       Query nuevoQuery = baseDeDatos.query();
+       nuevoQuery.constrain(Expositor.class);
+       Constraint nuevoConstraint = nuevoQuery.descend("nombre").constrain(nombre);
+       ObjectSet resultado = nuevoQuery.execute();
+       imprimirResultadoConsulta(resultado);
+   }
+   
+   public static void ConsultaSodaExpositoresPorGanancia(ObjectContainer baseDeDatos, float gananciaInferior, float gananciaSuperior){
+       Query nuevoQuery = baseDeDatos.query();
+       nuevoQuery.constrain(Expositor.class);
+       Constraint nuevoConstraint = nuevoQuery.descend("ganancia").constrain(gananciaSuperior).smaller();
+       nuevoQuery.descend("ganancia").constrain(gananciaInferior).greater().and(nuevoConstraint);
+       ObjectSet resultado = nuevoQuery.execute();
+       imprimirResultadoConsulta(resultado);
+   }
+   public static void ConsultaSODAExpositoresOrdenadosPorGanancia(ObjectContainer baseDeDatos){
+       Query nuevoQuery = baseDeDatos.query();
+       nuevoQuery.constrain(Expositor.class);
+       nuevoQuery.descend("ganancia").orderDescending();
+       ObjectSet resultado = nuevoQuery.execute();
+       imprimirResultadoConsulta(resultado);
+   }
+   
+   // Ahora a Realizar las Pruebas.
+   
+
+    
+        
+ }
+
