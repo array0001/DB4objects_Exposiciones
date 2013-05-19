@@ -27,6 +27,54 @@ public class Metodos {
             System.out.println("Error guardando el expositor.");
         }
     }
+       public static void almacenarConferencia(ObjectContainer baseDatos, Conferencia con) {
+        try {
+            baseDatos.store(con);
+            System.out.println("Se guardo la conferencia");
+        } catch (Exception e) {
+            System.out.println("Error guardando la conferencia");
+        }
+    }
+    
+    public static void actualizaGananciaExpositor(ObjectContainer bd,String nExpositor, float nuevaGanancia){
+       try{
+        Query query = bd.query();
+        query.constrain(Expositor.class);
+        query.descend("nombre").constrain(nExpositor);
+        ObjectSet res = query.execute();
+        Expositor ex = (Expositor)res.get(0);
+        ex.setGanancia(nuevaGanancia);
+        bd.store(ex);
+       }catch(Exception e){
+           System.out.println("No se encontro el Expositor a actualizar");
+       }
+        
+    }
+    
+    public static void actualizaTituloConferencia(ObjectContainer bd,String tituloConferenciaOld,String tituloNew){
+        Query query = bd.query();
+        query.constrain(Conferencia.class);
+        query.descend("titulo").constrain(tituloConferenciaOld);
+        ObjectSet res =query.execute();
+        Conferencia c = (Conferencia) res.get(0);
+        c.setTitulo(tituloNew);
+        bd.store(c);
+    }
+    
+     public static void consultaSODAConferenciaTitulo(ObjectContainer baseDatos, String titulo) {
+        Query query = baseDatos.query();
+        query.constrain(Conferencia.class);
+        query.descend("titulo").constrain(titulo);
+        ObjectSet resultado = query.execute();
+        imprimirResultadoConsulta(resultado);
+     }
+     
+     public static void consultaSODAConferencias(ObjectContainer bd){
+         Query query = bd.query();
+         query.constrain(Conferencia.class);
+         ObjectSet res = query.execute();
+         imprimirResultadoConsulta(res);
+     }
     
     public static void cerrarConexion(ObjectContainer baseDatos){
         try{

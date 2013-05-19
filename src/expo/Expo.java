@@ -25,8 +25,10 @@ public class Expo {
         Expositor expositor5 = new Expositor("1234510","Manuel Monsalve","manuel@example.com",500000);
         Expositor expositor6 = new Expositor("1234511","Sofia Valencia","sofi@example.com",600000);
         Expositor expositor7 = new Expositor("1234519","Jonathan Tamayo","jonas@example.com",600000);
-       
+//       
         
+           Conferencia c1 = new Conferencia("Google Maps API V3.",2,expositor1);
+           Conferencia c2 = new Conferencia("Google Glassware implementation.",2,expositor5);
         try{
           /* 
            Metodos.almacenarExpositor(baseDatos, expositor1);
@@ -37,6 +39,9 @@ public class Expo {
            Metodos.almacenarExpositor(baseDatos, expositor6);
            Metodos.almacenarExpositor(baseDatos, expositor7);
           */
+            
+          Metodos.almacenarConferencia(baseDatos,c1);
+          Metodos.almacenarConferencia(baseDatos,c2);
         
          // Busquedas de Expositores Mendiante el metodo de Consulta Query-BY-Example
           /* System.out.println("Todos los Ponentes");
@@ -63,7 +68,7 @@ public class Expo {
            System.out.println("----------------------------------");
            */
          // Busqueda De Expositores Mediante Consultas SODA.
-           System.out.println("Expositor con Nombre Luis Valencia");
+          /* System.out.println("Expositor con Nombre Luis Valencia");
            Metodos.ConsultaSODAExpositoresPorNombre(baseDatos, "Luis Valencia");
            System.out.println("----------------------------------");
            System.out.println("Todos Los Expositores");
@@ -79,14 +84,19 @@ public class Expo {
            
            // Esto fueron los tipicos ejemplos de como usar Las Consultas o tipos de Consultas en DB4o.
            
-           
-           
-           
-           
-            
-           
-           
-           
+            System.out.println("Actualizacion ganancia");
+            Metodos.actualizaGananciaExpositor(baseDatos, "Sofia Valencia",333000);
+            Metodos.actualizaGananciaExpositor(baseDatos, "Luis Valencia", 500000);
+           // Metodos.ConsultaSODAExpositoresPorNombre(baseDatos, "Sofia Valencia");
+            Metodos.ConsultaSODAExpositores(baseDatos);
+            System.out.println("-----------------------------------------------------");
+           */
+          
+            System.out.println("**************************************");
+            System.out.println("Actualizar titulo de Conferencia");
+            Metodos.actualizaTituloConferencia(baseDatos, "Google Maps API V3.", "Google Android Maps API V2");
+            Metodos.consultaSODAConferencias(baseDatos);
+            System.out.println("**************************************");
            
         }finally{
             Metodos.cerrarConexion(baseDatos);
